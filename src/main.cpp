@@ -13,7 +13,16 @@
 #include <iostream>
 
 int main(int argc, char *argv[]) {
+  // HiDPI adapt: enable automatic high-DPI scaling and use high-DPI pixmaps
+  // These must be set before creating QGuiApplication
+  QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
+  QCoreApplication::setAttribute(Qt::AA_UseHighDpiPixmaps);
+
   QGuiApplication app(argc, argv);
+  // Prefer pass-through scaling rounding to avoid unexpected up/down rounding
+  QGuiApplication::setHighDpiScaleFactorRoundingPolicy(Qt::HighDpiScaleFactorRoundingPolicy::PassThrough);
+  // Set application icon (used by window decorations and some platforms)
+  app.setWindowIcon(QIcon("qrc:/icon.png"));
   QQuickStyle::setStyle("FluentWinUI3");
   QQmlApplicationEngine engine;
   FFChan::Backend backend;

@@ -1,9 +1,9 @@
-<center>
+<div align="center">
 
 ![](./icon.png)
 
 # FFChan
 
-</center>
+</div>
 
 Alckan的继任者喵，采用 C++ / Qt6 / QtQuick 开发

@@ -20,6 +20,17 @@ qt_add_executable(qt_quick_app
   qml.qrc
 )
 
+# On Windows, if the user provided an icon.ico in project root, include a resource
+# file so the generated executable has that icon. The rc references ../icon.ico.
+if (WIN32)
+  if(EXISTS ${CMAKE_SOURCE_DIR}/icon.ico)
+    message(STATUS "Found icon.ico; adding Windows resources for executable icon.")
+    list(APPEND SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/icon.rc)
+  else()
+    message(STATUS "No icon.ico found in project root; Windows executable will not have bundled icon.")
+  endif()
+endif()
+
 target_link_libraries(qt_quick_app PRIVATE Qt6::Quick Qt6::QuickControls2 Qt6::Qml)
 
 # Link QtAwesome if available from FetchContent

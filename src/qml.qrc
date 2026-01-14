@@ -2,6 +2,7 @@
   <qresource prefix="/">
     <file alias="qml/MainWindow.qml">../qml/MainWindow.qml</file>
     <file alias="qml/Wizard.qml">../qml/Wizard.qml</file>
+    <file alias="icon.png">../icon.png</file>
     <file alias="translations/en.json">../translations/en.json</file>
     <file alias="translations/zh_CN.json">../translations/zh_CN.json</file>
   </qresource>

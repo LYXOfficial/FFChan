@@ -1,0 +1,3 @@
+// Resource file to embed application icon on Windows
+// This expects an icon file at project root: ../icon.ico
+1 ICON "../icon.ico"
