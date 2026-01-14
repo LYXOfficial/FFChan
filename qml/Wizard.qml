@@ -7,7 +7,7 @@ ApplicationWindow {
     flags: Qt.Window
     visible: true
     width: 320
-    height: 320
+    height: 260
     minimumWidth: width
     maximumWidth: width
     minimumHeight: height
