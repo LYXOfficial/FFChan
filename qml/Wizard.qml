@@ -13,10 +13,30 @@ ApplicationWindow {
     minimumHeight: height
     maximumHeight: height
     title: " "
-    StackView {
-        id: stack
-        anchors.fill: parent
-        initialItem: welcomePage
+    Column {
+        topPadding: 24
+        spacing: 12
+        Image {
+            source: "qrc:/icon.png"
+            width: 96
+            height: 96
+            fillMode: Image.PreserveAspectFit
+            anchors.horizontalCenter: parent.horizontalCenter
+        }
+        Rectangle {
+            height: 1
+            width: 250
+            color: "#d0d0d0"
+            anchors.horizontalCenter: parent.horizontalCenter
+        }
+
+        
+        StackView {
+            id: stack
+            width: 320
+            height: 120
+            initialItem: welcomePage
+        }
     }
 
     Component {
@@ -26,13 +46,6 @@ ApplicationWindow {
                 anchors.centerIn: parent
                 spacing: 12
 
-                Image {
-                    source: "qrc:/icon.png"
-                    width: 96
-                    height: 96
-                    fillMode: Image.PreserveAspectFit
-                    anchors.horizontalCenter: parent.horizontalCenter
-                }
 
                 Label {
                     text: (i18n.locale, i18n.tr("wizard.welcome"))
@@ -44,7 +57,7 @@ ApplicationWindow {
                     text: (i18n.locale, i18n.tr("wizard.intro"))
                     horizontalAlignment: Text.AlignHCenter
                     wrapMode: Text.WordWrap
-                    width: parent.width * 0.9
+                    width: parent.width
                     anchors.horizontalCenter: parent.horizontalCenter
                 }
 
@@ -200,22 +213,15 @@ ApplicationWindow {
                         }
                     }
                     Button {
-                        icon.source: "image://fa/redo"
-                        onClicked: {
-                        }
+                        onClicked: {}
                         width: ffmpegPathComboBox.height
                         height: ffmpegPathComboBox.height
-                        padding: 0
-                        ToolTip.text: (i18n.locale, i18n.tr("wizard.refresh"))
-                    }
-                    Button {
+                        leftPadding: ffmpegPathComboBox.height - 24
+                        rightPadding: ffmpegPathComboBox.height - 24
                         icon.source: "image://fa/folder-open"
-                        onClicked: {
-                        }
-                        width: ffmpegPathComboBox.height
-                        height: ffmpegPathComboBox.height
-                        padding: 0
-                        ToolTip.text: (i18n.locale, i18n.tr("wizard.browse"))
+                    }
+                    BusyIndicator {
+                        width: 20
                     }
                 }
                 Row {
