@@ -33,5 +33,9 @@
     "editor.tabSize": 2,
     "terminal.integrated.env.linux": {
         "QML_IMPORT_PATH": "/usr/lib/qt6/qml"
-    }
+    },
+    "qml.lint.disableMessages": [],
+    "qml.format.enable": true,
+    "qmlls.importPaths": ["/usr/lib/qt6/qml"],
+    "qmlls.buildDir": "${workspaceFolder}/build"
 }

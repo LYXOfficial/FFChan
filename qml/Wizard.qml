@@ -14,7 +14,7 @@ ApplicationWindow {
         Text {
             text: (i18n.locale, i18n.tr("wizard.welcome"))
             horizontalAlignment: Text.AlignHCenter
-            font.pointSize: 24
+            font.pointSize: 16
         }
         Text {
             text: (i18n.locale, i18n.tr("wizard.intro"))

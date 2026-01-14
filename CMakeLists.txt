@@ -8,7 +8,7 @@ set(CMAKE_AUTOUIC ON)
 # Generate QML LSP/QLS ini so tools like qmllint and the QML language server can find imports
 set(QT_QML_GENERATE_QMLLS_INI ON)
 
-find_package(Qt6 COMPONENTS Quick QuickControls2 REQUIRED)
+find_package(Qt6 COMPONENTS Quick QuickControls2 Widgets Qml REQUIRED)
 
 # Fetch QtAwesome (provides Font Awesome icons for Qt)
 include(FetchContent)

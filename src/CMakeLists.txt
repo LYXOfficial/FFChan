@@ -20,7 +20,7 @@ qt_add_executable(qt_quick_app
   qml.qrc
 )
 
-target_link_libraries(qt_quick_app PRIVATE Qt6::Quick Qt6::QuickControls2)
+target_link_libraries(qt_quick_app PRIVATE Qt6::Quick Qt6::QuickControls2 Qt6::Qml)
 
 # Link QtAwesome if available from FetchContent
 if (TARGET QtAwesome)
@@ -35,5 +35,3 @@ target_link_libraries(qt_quick_app PRIVATE yaml-cpp::yaml-cpp)
 if (WIN32)
   set_target_properties(qt_quick_app PROPERTIES WIN32_EXECUTABLE TRUE)
 endif()
-
-set(QT_QML_GENERATE_QMLLS_INI ON)
