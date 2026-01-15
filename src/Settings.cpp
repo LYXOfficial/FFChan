@@ -12,7 +12,7 @@ namespace FFChan {
 bool SettingsManager::loadYaml(const QString &path, QSettings &qsettings) {
   // Set sensible defaults from the system if not already present
   if (!qsettings.contains("theme/color")) {
-    QColor c = getSystemThemeColor();
+    QColor c = Sysfetch().getSystemThemeColor();
     qsettings.setValue("theme/color", c.name());
   }
   if (!qsettings.contains("theme/mode")) {
@@ -22,7 +22,7 @@ bool SettingsManager::loadYaml(const QString &path, QSettings &qsettings) {
     qsettings.setValue("ffmpeg-path", QString());
   }
   if (!qsettings.contains("language")) {
-    qsettings.setValue("language", getSystemLanguage());
+    qsettings.setValue("language", Sysfetch().getSystemLanguage());
   }
 
   try {
@@ -44,7 +44,8 @@ bool SettingsManager::loadYaml(const QString &path, QSettings &qsettings) {
       if (theme["mode"]) {
         QString themeMode =
             QString::fromStdString(theme["mode"].as<std::string>());
-        if (themeMode != "auto" && themeMode != "light" && themeMode != "dark") {
+        if (themeMode != "auto" && themeMode != "light" &&
+            themeMode != "dark") {
           themeMode = "auto";
         }
         qsettings.setValue("theme/mode", themeMode);
@@ -122,20 +123,21 @@ void initializeSettings(const QString &configPath) {
     return;
   g_settings = new QSettings();
   g_configPath = configPath;
+  const Sysfetch *sysfetch = new Sysfetch();
 
   // Populate defaults from system
   if (!g_settings->contains("theme/color")) {
-    QColor c = getSystemThemeColor();
+    QColor c = sysfetch->getSystemThemeColor();
     g_settings->setValue("theme/color", c.name());
   }
   if (!g_settings->contains("theme/mode")) {
     g_settings->setValue("theme/mode", "auto");
   }
   if (!g_settings->contains("ffmpeg-path")) {
-    g_settings->setValue("ffmpeg-path", QString());
+    g_settings->setValue("ffmpeg-path", sysfetch->getFFmpegPath()[0]);
   }
   if (!g_settings->contains("language")) {
-    g_settings->setValue("language", getSystemLanguage());
+    g_settings->setValue("language", sysfetch->getSystemLanguage());
   }
 
   SettingsManager mgr;

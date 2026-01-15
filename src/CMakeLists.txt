@@ -39,7 +39,7 @@ qt_add_executable(qt_quick_app
   qml.qrc
 )
 
-target_link_libraries(qt_quick_app PRIVATE Qt6::Quick Qt6::QuickControls2 Qt6::Qml)
+target_link_libraries(qt_quick_app PRIVATE Qt6::Quick Qt6::QuickControls2 Qt6::Qml Qt6::Widgets)
 
 # Link QtAwesome if available from FetchContent
 if (TARGET QtAwesome)

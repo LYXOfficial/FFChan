@@ -11,10 +11,11 @@
 #include <QDirIterator>
 #include <QDebug>
 #include <QStyleHints>
+#include <QFileDialog>
 
 namespace FFChan {
 
-QColor getSystemThemeColor()
+QColor Sysfetch::getSystemThemeColor() const
 {
 #if defined(Q_OS_WIN)
     QSettings reg("HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\DWM", QSettings::NativeFormat);
@@ -62,7 +63,7 @@ QColor getSystemThemeColor()
     return QColor("#39c5bb"); // fallback
 }
 
-QString getSystemLanguage()
+QString Sysfetch::getSystemLanguage() const
 {
     QStringList available;
     // gather translations available in resource :/translations
@@ -93,10 +94,9 @@ QString getSystemLanguage()
     return QStringLiteral("en");
 }
 
-QStringList getFFmpegPath()
+QStringList Sysfetch::getFFmpegPath() const
 {
     QStringList results;
-
     // 1) Use which/where to find candidates
 #if defined(Q_OS_WIN)
     QProcess p;
@@ -163,7 +163,65 @@ QStringList getFFmpegPath()
     return unique;
 }
 
-QString getSystemThemeMode()
+bool Sysfetch::verifyFFmpeg(const QString &path) const
+{
+    if (path.isEmpty()) return false;
+
+    // Prefer to check executable existence first
+    QFileInfo fi(path);
+    if (!fi.exists()) return false;
+
+    QProcess p;
+    // Ask ffmpeg to print its version info
+    p.start(path, QStringList() << "-version");
+    if (!p.waitForStarted(500)) return false;
+    // Give ffmpeg up to 2 seconds to respond
+    if (!p.waitForFinished(2000)) return false;
+
+    QByteArray out = p.readAllStandardOutput() + p.readAllStandardError();
+    const QString s = QString::fromUtf8(out).toLower();
+    // Basic heuristic: output contains "ffmpeg" or "ffmpeg version"
+    if (s.contains("ffmpeg")) return true;
+    return false;
+}
+
+QString Sysfetch::openFile(const QString &filter) const
+{
+    QString start = QStandardPaths::writableLocation(QStandardPaths::HomeLocation);
+    return QFileDialog::getOpenFileName(nullptr, QString(), start, filter);
+}
+
+QString Sysfetch::openFile(const QString &filter, const QString &title) const
+{
+    QString start = QStandardPaths::writableLocation(QStandardPaths::HomeLocation);
+    return QFileDialog::getOpenFileName(nullptr, title, start, filter);
+}
+
+QString Sysfetch::openFile(const QString &filter, const QString &title, const QString &defaultPath) const
+{
+    QString start = defaultPath.isEmpty() ? QStandardPaths::writableLocation(QStandardPaths::HomeLocation) : defaultPath;
+    return QFileDialog::getOpenFileName(nullptr, title, start, filter);
+}
+
+QString Sysfetch::openFolder(const QString &filter) const
+{
+    QString start = QStandardPaths::writableLocation(QStandardPaths::HomeLocation);
+    return QFileDialog::getExistingDirectory(nullptr, QString(), start);
+}
+
+QString Sysfetch::openFolder(const QString &filter, const QString &title) const
+{
+    QString start = QStandardPaths::writableLocation(QStandardPaths::HomeLocation);
+    return QFileDialog::getExistingDirectory(nullptr, title, start);
+}
+
+QString Sysfetch::openFolder(const QString &filter, const QString &title, const QString &defaultPath) const
+{
+    QString start = defaultPath.isEmpty() ? QStandardPaths::writableLocation(QStandardPaths::HomeLocation) : defaultPath;
+    return QFileDialog::getExistingDirectory(nullptr, title, start);
+}
+
+QString Sysfetch::getSystemThemeMode() const
 {
 #if QT_VERSION >= QT_VERSION_CHECK(6, 5, 0)
     if (QGuiApplication::instance() && QGuiApplication::styleHints()) {

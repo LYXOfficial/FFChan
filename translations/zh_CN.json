@@ -13,10 +13,10 @@
   "wizard.theme.mode.dark": "暗黑",
   "wizard.theme.color": "主题色",
   "wizard.ffmpegPath": "配置FFmpeg路径",
-  "wizard.ffmpegPath.noFFmpeg": "错误：未找到FFmpeg，请先下载并安装。",
+  "wizard.ffmpegPath.noFFmpeg": "未找到FFmpeg",
+  "wizard.ffmpegPath.invalidFFmpeg": "所选路径无效。",
   "wizard.ffmpegPath.hint": "从扫描到的路径中选择...",
-  "wizard.ffmpegPath.browse": "浏览",
-  "wizard.ffmpegPath.refresh": "刷新",
+  "wizard.ffmpegPath.browse": "浏览FFmpeg路径",
   "wizard.finish.hint": "配置完成～请尽情享受使用吧！",
   "wizard.finish": "完成"
 }

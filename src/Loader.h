@@ -17,4 +17,8 @@ bool prepareSettings(const QString &cfgPath);
 // Backwards-compatible: prepare and load engine (kept for compatibility)
 bool prepareEngine(QQmlApplicationEngine &engine);
 
+// Initialize engine with all context properties, load QML, and run event loop.
+// Returns the application exit code.
+int initializeAndRunEngine();
+
 } // namespace FFChan

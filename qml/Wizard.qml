@@ -7,7 +7,7 @@ ApplicationWindow {
     flags: Qt.Window
     visible: true
     width: 320
-    height: 260
+    height: 280
     minimumWidth: width
     maximumWidth: width
     minimumHeight: height
@@ -30,7 +30,6 @@ ApplicationWindow {
             anchors.horizontalCenter: parent.horizontalCenter
         }
 
-        
         StackView {
             id: stack
             width: 320
@@ -45,8 +44,6 @@ ApplicationWindow {
             Column {
                 anchors.centerIn: parent
                 spacing: 12
-
-
                 Label {
                     text: (i18n.locale, i18n.tr("wizard.welcome"))
                     horizontalAlignment: Text.AlignHCenter
@@ -76,7 +73,7 @@ ApplicationWindow {
         Page {
             Column {
                 anchors.centerIn: parent
-                spacing: 12
+                spacing: 6
 
                 Label {
                     text: (i18n.locale, i18n.tr("wizard.language"))
@@ -123,7 +120,7 @@ ApplicationWindow {
     //     Page {
     //         Column {
     //             anchors.centerIn: parent
-    //             spacing: 12
+    //             spacing: 6
 
     //             Label {
     //                 text: (i18n.locale, i18n.tr("wizard.theme"))
@@ -188,7 +185,7 @@ ApplicationWindow {
         Page {
             Column {
                 anchors.centerIn: parent
-                spacing: 12
+                spacing: 6
                 Label {
                     text: (i18n.locale, i18n.tr("wizard.ffmpegPath"))
                     horizontalAlignment: Text.AlignHCenter
@@ -202,6 +199,19 @@ ApplicationWindow {
                         id: ffmpegPathComboBox
                         editable: true
                         width: 200
+                        currentValue: settings.get("ffmpeg-path")[0] ?? sysfetch.getFFmpegPath()[0]
+                        model: {
+                            if (!sysfetch.getFFmpegPath().length)
+                                return [(locale, i18n.tr("wizard.ffmpegPath.noFFmpeg"))];
+                            var arr = [];
+                            for (var i = 0; i < sysfetch.getFFmpegPath().length; i++) {
+                                arr.push(sysfetch.getFFmpegPath()[i]);
+                            }
+                            return arr;
+                        }
+                        onCurrentValueChanged: {
+                            nextButton.enabled = true;
+                        }
                         Text {
                             text: (i18n.locale, i18n.tr("wizard.ffmpegPath.hint"))
                             color: "gray"
@@ -213,7 +223,13 @@ ApplicationWindow {
                         }
                     }
                     Button {
-                        onClicked: {}
+                        onClicked: {
+                            var path = sysfetch.openFile("ffmpeg*", (i18n.locale, i18n.tr("wizard.ffmpegPath.browse")));
+                            if (path) {
+                                ffmpegPathComboBox.model.push(path);
+                                ffmpegPathComboBox.currentValue = path;
+                            }
+                        }
                         width: ffmpegPathComboBox.height
                         height: ffmpegPathComboBox.height
                         leftPadding: ffmpegPathComboBox.height - 24
@@ -224,6 +240,12 @@ ApplicationWindow {
                         width: 20
                     }
                 }
+                Text {
+                    text: (i18n.locale, i18n.tr("wizard.ffmpegPath.invalidFFmpeg"))
+                    color: "red"
+                    visible: !nextButton.enabled
+                    anchors.horizontalCenter: parent.horizontalCenter
+                }
                 Row {
                     anchors.horizontalCenter: parent.horizontalCenter
                     spacing: 12
@@ -233,9 +255,53 @@ ApplicationWindow {
                         icon.source: "image://fa/arrow-left"
                     }
                     Button {
+                        id: nextButton
                         text: (i18n.locale, i18n.tr("wizard.next"))
-                        onClicked: stack.push(finishPage)
+                        onClicked: () => {
+                            if (sysfetch.verifyFFmpeg(ffmpegPathComboBox.currentText)) {
+                                settings.set("ffmpeg-path", ffmpegPathComboBox.currentText);
+                                stack.push(finalPage);
+                            } else {
+                                ffmpegPathComboBox.forceActiveFocus();
+                                nextButton.enabled = false;
+                            }
+                        }
                         icon.source: "image://fa/arrow-right"
+                    }
+                }
+            }
+        }
+    }
+    Component {
+        id: finalPage
+        Page {
+            Column {
+                anchors.centerIn: parent
+                spacing: 12
+                Label {
+                    text: (i18n.locale, i18n.tr("wizard.finish"))
+                    horizontalAlignment: Text.AlignHCenter
+                    font.pointSize: 16
+                    anchors.horizontalCenter: parent.horizontalCenter
+                }
+                Label {
+                    text: (i18n.locale, i18n.tr("wizard.finish.hint"))
+                    horizontalAlignment: Text.AlignHCenter
+                    wrapMode: Text.WordWrap
+                    anchors.horizontalCenter: parent.horizontalCenter
+                }
+                Row {
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    spacing: 12
+                    Button {
+                        text: (i18n.locale, i18n.tr("wizard.back"))
+                        onClicked: stack.pop()
+                        icon.source: "image://fa/arrow-left"
+                    }
+                    Button {
+                        text: (i18n.locale, i18n.tr("wizard.finish"))
+                        icon.source: "image://fa/check"
+                        onClicked: Qt.quit()
                     }
                 }
             }
